@@ -47,17 +47,23 @@ if (!require(dplyr)) {
 #1. Merges the training and the test sets to create one data set.
 
 #Main Path
-Input.Path <- paste0("C:/Users/Gilva/OneDrive/ESTUDIOS (PAPERS)/Cursos y ",
-                     "Certificados/Data Science/Clase 3 - Getting and Cleaning",
-                     " Data/Week 4/UCI HAR Dataset/")
+url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+Zip.Location <- "./Input/Dataset.zip"
+  if(!file.exists("./Input")){dir.create("./Input")}
+# if(!file.exists(file.path(getwd(),"Input"))){dir.create(file.path(getwd(), "Input"))}
+  if(!file.exists("./Output")){dir.create("./Output")}
+download.file(url, destfile = Zip.Location)
+unzip(zipfile = Zip.Location, exdir="./Input")
+Input.Path <- file.path(getwd(), "Input/UCI HAR Dataset/")
+Output.Path <- file.path(getwd(), "Output/")
 
 #Part 1.1 - Train Merge
 #Gather
-Train <- "train/"
+Train <- "/train/"
 Train.Input.Path.1 <- paste0(Input.Path, Train, "subject_train.txt")
 Train.Input.Path.2 <- paste0(Input.Path, Train, "X_train.txt")
 Train.Input.Path.3 <- paste0(Input.Path, Train, "Y_train.txt")
-Features.Path <- paste0(Input.Path, "features.txt")
+Features.Path <- paste0(Input.Path, "/features.txt")
 Features <- read.table(Features.Path)
 #Prepare
 Train.Input.1 <- read.table(Train.Input.Path.1)
@@ -77,7 +83,7 @@ ncol(Train.Input.1) + ncol(Train.Input.2) + ncol(Train.Input.3) + 1 == ncol( #+1
 
 #Part 1.2 - Test Merge
 #Gather
-Test <- "test/"
+Test <- "/test/"
 Test.Input.Path.1 <- paste0(Input.Path, Test, "subject_test.txt")
 Test.Input.Path.2 <- paste0(Input.Path, Test, "X_test.txt")
 Test.Input.Path.3 <- paste0(Input.Path, Test, "Y_test.txt")
@@ -117,7 +123,7 @@ paste("final.col.length:", final.col.length)
 #3. Uses descriptive activity names to name the activities in the data set
 
 #Path
-Activity.Input.Path.1 <- paste0(Input.Path, "activity_labels.txt")
+Activity.Input.Path.1 <- paste0(Input.Path, "/activity_labels.txt")
 #New Variable
 Activity.File <- read.table(Activity.Input.Path.1)
 colnames(Activity.File)
@@ -153,7 +159,7 @@ final.col.length <- nrow(Activity.2)
 paste("final.row.length.is:", final.col.length)
 Activity.2 <- Activity.2[order(Activity.2$subject, Activity.2$activity),]
 write.table(Activity.2, paste0(
-  Input.Path,"mean.txt"), row.name=FALSE)
+  Output.Path,"/mean.txt"), row.name=FALSE)
 
 
 
